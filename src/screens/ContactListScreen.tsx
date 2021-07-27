@@ -2,6 +2,7 @@ import { getFocusedRouteNameFromRoute, RouteProp } from '@react-navigation/core'
 import { StackNavigationOptions, StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
 import { FlatList, Text, StyleSheet, View } from 'react-native';
+import ContactListItem from '../components/contacts/ContactListItem';
 import ExitButton from '../components/headerButtons/ExitButton';
 
 // import CartButton from '../components/headerButtons/CartButton';
@@ -55,9 +56,12 @@ const ContactListScreen: React.FC<ContactLisScreenProps> = ({ navigation, route 
 	// 	return <ErrorScreen errorMessage='Could not load product listings !!' icon='alert' ButtonComponent={<Button mode='contained' onPress={request}>Try Again</Button>}/>
 	// }
 	return (
-		<View style={centered}>
-			<Text>This Is Contact List</Text>
-		</View>
+		<ContactListItem
+			onPress={() => console.log('Pressed!')}
+			username="saty"
+			latestMessage="Hi , How u doin ?"
+			avatar={require('../../assets/user.png')}
+		/>
 	);
 };
 
@@ -81,7 +85,7 @@ export const screenOptions:
 		) => StackNavigationOptions)
 	| undefined = ({ route }) => {
 	return {
-		title: 'V Chat App',
+		title: 'GupShup',
 		headerRight: () => <ExitButton />
 	};
 };
