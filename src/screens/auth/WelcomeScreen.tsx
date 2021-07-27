@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Colors } from '../../../constants/colors';
 import AppButton from '../../components/UI/app/Button';
-import WelcomeIllustration from '../../svgs/welcome';
+import WelcomeIllustration from '../../svgs/Welcome';
 import { AuthStackParamList } from '../../navigation/AuthNavigator';
 import { DEVICE_HEIGHT, DEVICE_WIDTH } from '../../../constants';
 

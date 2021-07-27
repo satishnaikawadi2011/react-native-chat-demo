@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { TextInput, HelperText } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -13,6 +13,8 @@ import { AuthStackParamList } from '../../navigation/AuthNavigator';
 import { useAuthStore } from '../../store/auth';
 import authApi from '../../api/auth';
 import useApi from '../../hooks/useApi';
+import LogoIcon from '../../svgs/LogoIcon';
+import AppSafeAreaView from '../../components/UI/app/AppSafeAreaView';
 
 type RegisterScreenNavigationProp = StackNavigationProp<AuthStackParamList, 'Register'>;
 
@@ -56,8 +58,9 @@ const SignupScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 		}
 	};
 	return (
-		<View style={{ flex: 1, justifyContent: 'space-evenly' }}>
-			<View style={styles.container}>
+		<AppSafeAreaView style={{ flex: 1, justifyContent: 'space-evenly' }}>
+			<ScrollView contentContainerStyle={styles.container}>
+				<LogoIcon height={300} width={300} />
 				<Formik validationSchema={authSchema} initialValues={initialValues} onSubmit={submitHandler}>
 					{(props) => (
 						<View style={styles.form}>
@@ -215,8 +218,8 @@ const SignupScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 						</View>
 					)}
 				</Formik>
-			</View>
-		</View>
+			</ScrollView>
+		</AppSafeAreaView>
 	);
 };
 
@@ -231,7 +234,8 @@ const styles = StyleSheet.create({
 		},
 	container:
 		{
-			alignItems: 'center'
+			alignItems: 'center',
+			flexGrow: 1
 		},
 	input:
 		{

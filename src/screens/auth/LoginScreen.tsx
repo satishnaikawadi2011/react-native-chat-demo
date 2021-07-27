@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { TextInput, HelperText } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -13,6 +13,7 @@ import { useAuthStore } from '../../store/auth';
 import { AuthStackParamList } from '../../navigation/AuthNavigator';
 import useApi from '../../hooks/useApi';
 import authApi from '../../api/auth';
+import LogoIcon from '../../svgs/LogoIcon';
 
 type LoginScreenNavigationProp = StackNavigationProp<AuthStackParamList, 'Login'>;
 
@@ -53,7 +54,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 	};
 	return (
 		<View style={{ flex: 1, justifyContent: 'space-evenly' }}>
-			<View style={styles.container}>
+			<ScrollView contentContainerStyle={styles.container}>
+				<LogoIcon height={300} width={300} />
 				<Formik validationSchema={authSchema} initialValues={initialValues} onSubmit={submitHandler}>
 					{(props) => (
 						<View style={styles.form}>
@@ -146,7 +148,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 						</View>
 					)}
 				</Formik>
-			</View>
+			</ScrollView>
 		</View>
 	);
 };
@@ -162,7 +164,8 @@ const styles = StyleSheet.create({
 		},
 	container:
 		{
-			alignItems: 'center'
+			alignItems: 'center',
+			flexGrow: 1
 		},
 	input:
 		{
