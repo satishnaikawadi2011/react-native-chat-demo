@@ -3,7 +3,7 @@ export interface User {
 	_id: string;
 	firstName: string;
 	lastName: string;
-	password: string;
+	lastOnlineAt: string;
 	username: string;
 	createdAt: string;
 	updatedAt: string;

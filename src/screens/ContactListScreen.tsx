@@ -1,21 +1,23 @@
-import { getFocusedRouteNameFromRoute, RouteProp } from '@react-navigation/core';
+import { RouteProp } from '@react-navigation/core';
 import { StackNavigationOptions, StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
-import { FlatList, Text, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import ContactListItem from '../components/contacts/ContactListItem';
 import ExitButton from '../components/headerButtons/ExitButton';
 
-// import CartButton from '../components/headerButtons/CartButton';
 import useApi from '../hooks/useApi';
 import { HomeStackParamList } from '../navigation/AppNavigator';
-// import { useProductStore } from '../store/product';
-// import { centered } from '../utils/commonStyles';
-// import productsApi from '../api/products'
-// import categoriesApi from '../api/categories'
+import contactsApi from '../api/contact';
+import messagesApi from '../api/message';
 import { useAuthStore } from '../store/auth';
 import { centered } from '../utils/commonStyles';
 // import ErrorScreen from './ErrorScreen';
-// import AppActivityIndicator from '../animations/AppActivityIndicator';
+import AppActivityIndicator from '../animations/AppActivityIndicator';
+import { useContactStore } from '../store/contact';
+import { Title } from 'react-native-paper';
+import SadEmojiIcon from '../svgs/SadEmojiIcon';
+import { useMessageStore } from '../store/message';
+import AppDivider from '../components/UI/app/AppDivider';
 
 type ContactListScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'ContactList'>;
 
@@ -27,41 +29,79 @@ interface ContactLisScreenProps {
 }
 
 const ContactListScreen: React.FC<ContactLisScreenProps> = ({ navigation, route }) => {
-	// const { products,  categories, selectedCategory,setCategories,setProducts } = useProductStore();
+	const { contacts, setContacts } = useContactStore();
+	const { latestMessages, setLatestMessages } = useMessageStore();
 	const { token } = useAuthStore();
-	// const categoriesRes = useApi(categoriesApi.getCategories)
-	// const productsRes = useApi(productsApi.getProducts)
-	// useEffect(() => {
-	// 	if (token) {
-	// 		request()
-	// 	}
-	// }, [token]);
-	// useEffect(() => {
-	// 	if (productsRes.data && categoriesRes.data) {
-	// 		setCategories(categoriesRes.data as any)
-	// 	setProducts(productsRes.data as any);
-	// 	}
-	// },[categoriesRes.data,productsRes.data])
-	// const request = () => {
-	// 	categoriesRes.request(token);
-	// 	productsRes.request(token);
-	// }
-	// const filteredProducts:any[]|null = selectedCategory ? products!.filter(product => product.categoryId === selectedCategory?._id) : products;
-	// if (categoriesRes.loading || productsRes.loading) {
-	// 	return (
-	// 		<AppActivityIndicator visible={true}/>
-	// 	);
-	// }
+
+	const contactsRes = useApi(contactsApi.getContacts);
+	const messagesRes = useApi(messagesApi.getLatestMessages);
+
+	useEffect(
+		() => {
+			if (token) {
+				request();
+			}
+		},
+		[
+			token
+		]
+	);
+
+	useEffect(
+		() => {
+			if (contactsRes.data && messagesRes.data) {
+				setContacts(contactsRes.data as any);
+				setLatestMessages(messagesRes.data);
+			}
+		},
+		[
+			contactsRes.data,
+			messagesRes.data
+		]
+	);
+
+	const request = () => {
+		contactsRes.request();
+		messagesRes.request();
+	};
+
+	if (contactsRes.loading || messagesRes.loading) {
+		return <AppActivityIndicator visible={true} />;
+	}
+
 	// if (categoriesRes.error || productsRes.error) {
 	// 	return <ErrorScreen errorMessage='Could not load product listings !!' icon='alert' ButtonComponent={<Button mode='contained' onPress={request}>Try Again</Button>}/>
 	// }
 	return (
-		<ContactListItem
-			onPress={() => console.log('Pressed!')}
-			username="saty"
-			latestMessage="Hi , How u doin ?"
-			avatar={require('../../assets/user.png')}
-		/>
+		<View style={{ flex: 1 }}>
+			{
+				contacts.length === 0 ? <View
+					style={[
+						centered
+					]}
+				>
+					<SadEmojiIcon height={150} width={150} />
+					<Title style={styles.title}>No contacts found !!</Title>
+				</View> :
+				<FlatList
+					keyExtractor={(item) => item._id}
+					data={contacts}
+					renderItem={({ item }) => {
+						return (
+							<View>
+								<ContactListItem
+									onPress={() => navigation.navigate('Chat', { contact: item })}
+									username={item.username}
+									latestMessage={latestMessages[item.username].content}
+									avatar={require('../../assets/user.png')}
+									createdAt={latestMessages[item.username].createdAt}
+								/>
+								<AppDivider />
+							</View>
+						);
+					}}
+				/>}
+		</View>
 	);
 };
 
