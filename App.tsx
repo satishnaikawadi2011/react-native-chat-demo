@@ -49,8 +49,10 @@ export default function App() {
 	return (
 		<PaperProvider>
 			<AppNavigationContainer />
-			{/* <View style={{ flex: 1, justifyContent: 'center' }}>
-				<OrderItemCard />
+			{/* <View style={{ flex: 1 }}>
+				{messages.reverse().map((m) => {
+					return <MessageBubble message={m} key={m._id} />;
+				})}
 			</View> */}
 		</PaperProvider>
 	);
