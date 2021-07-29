@@ -7,6 +7,9 @@ import { useAuthStore } from './src/store/auth';
 import AppNavigationContainer from './src/navigation/AppNavigationContainer';
 import { Provider as PaperProvider } from 'react-native-paper';
 import getDataFromAsyncStorageOnStart from './src/utils/getDataFromAsyncStorageOnStart';
+import { View } from 'react-native';
+import MessageInput from './src/components/messages/MessageInput';
+// import { io } from 'socket.io-client';
 
 export default function App() {
 	const [
@@ -14,6 +17,10 @@ export default function App() {
 		setIsReady
 	] = useState(false);
 	const { setExpiryDate: b, setUser: c, setToken: d } = useAuthStore();
+	// useEffect(() => {
+	// 	const socket = io('http://localhost:5000');
+	// 	socket.emit('online', { socketId: 'ksksk', userId: 'skksksks' });
+	// }, []);
 	useEffect(
 		() => {
 			launch();
@@ -48,12 +55,10 @@ export default function App() {
 	}
 	return (
 		<PaperProvider>
-			<AppNavigationContainer />
-			{/* <View style={{ flex: 1 }}>
-				{messages.reverse().map((m) => {
-					return <MessageBubble message={m} key={m._id} />;
-				})}
-			</View> */}
+			{/* <AppNavigationContainer /> */}
+			<View style={{ flex: 1 }}>
+				<MessageInput placeholder="Type message ...." onPressSend={() => console.log('Pressed Send')} />
+			</View>
 		</PaperProvider>
 	);
 }

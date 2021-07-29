@@ -4,7 +4,11 @@ import React, { useEffect } from 'react';
 import { FlatList, StyleSheet, View, Text } from 'react-native';
 
 import { HomeStackParamList } from '../navigation/AppNavigator';
-import { centered } from '../utils/commonStyles';
+import messagesApi from '../api/message';
+import useApi from '../hooks/useApi';
+import { useMessageStore } from '../store/message';
+import AppActivityIndicator from '../animations/AppActivityIndicator';
+import MessageBubble from '../components/messages/MessageBubble';
 
 type ChatScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'Chat'>;
 
@@ -16,9 +20,46 @@ interface ChatScreenProps {
 }
 
 const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
+	const contact = route.params.contact;
+	const { currentPage, messages, totalPages, setCurrentPage, setTotalPages, setMessages } = useMessageStore();
+
+	const messagesRes = useApi(messagesApi.getMessages);
+
+	useEffect(
+		() => {
+			messagesRes.request(contact._id, currentPage);
+		},
+		[
+			currentPage
+		]
+	);
+
+	useEffect(
+		() => {
+			const data = messagesRes.data as any;
+			if (data) {
+				setMessages(data.messages);
+				setTotalPages(data.totalPages);
+			}
+		},
+		[
+			messagesRes.data
+		]
+	);
+
+	if (messagesRes.loading) {
+		return <AppActivityIndicator visible={true} />;
+	}
+
 	return (
-		<View style={centered}>
-			<Text>Chat Screen</Text>
+		<View style={{ flex: 1 }}>
+			<FlatList
+				keyExtractor={(item) => item._id}
+				data={messages.reverse()}
+				renderItem={({ item }) => {
+					return <MessageBubble message={item} />;
+				}}
+			/>
 		</View>
 	);
 };
