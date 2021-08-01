@@ -9,4 +9,6 @@ export interface Message {
 	createdAt: string;
 	updatedAt: string;
 	__v: number;
+	isSent?: boolean;
+	clientSideId?: string;
 }

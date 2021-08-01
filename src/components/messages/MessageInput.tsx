@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 		},
 	container:
 		{
-			marginTop: 100,
+			marginTop: 10,
 			flexDirection: 'row',
 			width: DEVICE_WIDTH,
 			paddingVertical: 5,

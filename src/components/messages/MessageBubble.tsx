@@ -1,9 +1,11 @@
+import { Feather, MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { DEVICE_WIDTH } from '../../../constants';
 import { Colors } from '../../../constants/colors';
 import { Message } from '../../models/Message';
 import { useAuthStore } from '../../store/auth';
+import PendingIcon from '../../svgs/PendingIcon';
 
 interface Props {
 	message: Message;
@@ -28,7 +30,9 @@ const MessageBubble: React.FC<Props> = ({ message }) => {
 			style={[styles.common,style,	
 			]}
 		>
-            <Text style={styles.text}>{message.content}</Text>
+			<Text style={styles.text}>{message.content}</Text>
+			{message.isSent && message.from !== 'server' && message.from === user?.username && <MaterialIcons name="done" size={15} color={Colors.white} style={styles.icon} />}
+			{!message.isSent && message.from !== 'server' && message.from === user?.username && <Feather name="clock" size={15} color={Colors.white} style={styles.icon} />}
 		</View>
 	);
 };
@@ -58,7 +62,8 @@ const styles = StyleSheet.create({
 	text:
 		{
 			color: Colors.white,
-			textAlign: 'left'
+		textAlign: 'left',
+			marginRight:20
 		},
 	common:
 		{
@@ -67,6 +72,15 @@ const styles = StyleSheet.create({
 			padding: 10,
 			borderRadius: 15,
 			marginVertical: 1.5,
-			marginHorizontal: 15
-		}
+		    marginHorizontal: 15,
+		flexDirection: 'row',
+			position:'relative'
+	},
+	icon: {
+		alignSelf: 'baseline',
+		position: 'absolute',
+		right: 0,
+		bottom: 0,
+		padding: 5,
+	}
 });
